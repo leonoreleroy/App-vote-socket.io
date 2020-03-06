@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>App vote</title>
+
+  <style>
+  
+  </style>
+</head>
+
+<body>
+  <div class="controls">
+    <button class="plus-jade">Vote Jade<i class="fa fa-thumbs-up"></i></button>
+    <button class="minus-jade">Contre Jade<i class="fa fa-thumbs-down"></i></button>
+  </div>
+  <div class="score"></div>
+
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    window.socket || document.write('<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"><\/script>')
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      
+      // On se connecte au serveur
+      var socket = io()
+
+      $('.plus-jade').click(function () {
+        socket.emit('vote', { qty: 1 });
+      });
+      $('.minus-jade').click(function () {
+        socket.emit('vote', { qty: -1 });
+      });
+
+      socket.on('score-update', function (score) {
+        $('.score').text("Électeurs connectés: " + score.clients +" Votes pour: " + score.plusCount + " Votes contre: " + score.minusCount);
+        
+      });
+    });
+  </script>
+  
+<script src="client.js"></script>
+
+</body>
+
+</html>
